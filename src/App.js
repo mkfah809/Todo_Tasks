@@ -1,24 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
-
+import "./App.css";
+import TodoApp, {addItem} from "./Components/TodoApp.js/todoApp";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import Dashboard from "./Components/Dashboard/dashboard";
+import PageNotFound from "./Components/PageNotFound/pageNotFound";
 function App() {
+  addItem();
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Switch>
+        <Route exact path="/dashboard">
+          <Dashboard />
+        </Route>
+        <Route exact path="/welcome">
+          <TodoApp />
+        </Route>
+        <Route  path="/">
+          <PageNotFound />
+        </Route>
+      </Switch>
+    </Router>
   );
 }
 
