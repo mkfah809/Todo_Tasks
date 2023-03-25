@@ -1,10 +1,9 @@
 import React from 'react';
 
 const Header = () => {
-    const fullName = "Mina K Fahmy"
     return (
         <div>
-            <h3>My Name is {fullName}</h3>
+            <h1>Welcome Page</h1>
         </div>
     );
 };

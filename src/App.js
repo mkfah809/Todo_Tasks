@@ -1,10 +1,10 @@
 import "./App.css";
-import TodoApp, {addItem} from "./Components/TodoApp.js/todoApp";
+import TodoApp from "./Components/TodoApp.js/todoApp";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Dashboard from "./Components/Dashboard/dashboard";
 import PageNotFound from "./Components/PageNotFound/pageNotFound";
 function App() {
-  addItem();
+
   
   return (
     <Router>
