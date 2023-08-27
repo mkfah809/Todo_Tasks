@@ -5,75 +5,82 @@ import TodoItem from "../TodoItem";
 
 const TodoApp = () => {
   const [todoItems, setTodoItems] = useState([]);
-  const [todoId, setTodoId] = useState(4);
+  // const [todoId, setTodoId] = useState(4);
   useEffect(() => {
-    const dataFromDb = [
-      {
-        id: 1,
-        todoItemName: "Get the milk",
-        isDone: false,
-      },
-      {
-        id: 2,
-        todoItemName: "pick up the kids",
-        isDone: false,
-      },
-      {
-        id: 3,
-        todoItemName: "Go to work",
-        isDone: false,
-      },
-    ];
-    setTodoItems(dataFromDb);
+    fetch("/api/todoItems") // bas keda hygeely moshkela 3lshan b2olo fetch mn 8080 to 3000
+      //i need to do => I'm react app i should be consider the same as localhost 8080
+      // 3lshan n7il moshkla dy lazm n3ml 2 things:
+      //1) nro7 lil package.json w nketb  proxy":"http://localhost:8080",
+      //2) w nemsa7 localhost mn fetch
+      .then((response) => {
+        // once recieved do something
+        response.json().then((todoItems) => {
+          setTodoItems(todoItems);
+        });
+      });
   }, []);
 
-  function handleTodoItemDataUpdate(data) {
-    let todoItemsCopy = [...todoItems]; // brand new dublicate object
-    //find the index
-    const i = todoItemsCopy.findIndex((todoItem) => todoItem.id === data.id);
-    todoItems[i] = data;
-    //setTodoItems(todoItems) // msh htsht8al 3lshan lazm n assign the entire array to another variable
-    setTodoItems(todoItemsCopy);
+  function handleTodoItemDataUpdate(data, shouldSave) {
+    // nekteb el code da 3shan n2dar nekteb onChange event fil input. 
+    if (!shouldSave) {
+      let todoItemsCopy = [...todoItems];
+      const i = todoItemsCopy.findIndex((todiItem) => todiItem.id === data.id)
+      console.log("index i = "+i);
+      todoItemsCopy[i] = data
+      setTodoItems(
+        todoItemsCopy);
+    } else {
+    }
+    fetch("/api/todoItems", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((todoItems) => {
+        setTodoItems(todoItems);
+      });
   }
 
   function handleTodoItemDataDelete(data) {
-    console.log("I supposed to delete " + data);
     let todoItemsCopy = [...todoItems];
     todoItemsCopy = todoItemsCopy.filter(
       (todoItems) => todoItems.id !== data.id
     ); // we filter out the data at the I'th index
 
-    setTodoItems(todoItemsCopy)
+    setTodoItems(todoItemsCopy);
   }
 
+  function handleTodoitemDataAdd() {
+    const data = {
+      itemName: "get milk",
+      isDone: false,
+    };
+
+    fetch("/api/todoItems", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((todoItems) => {
+        setTodoItems(todoItems);
+      });
+  }
   return (
     <div>
       <Header />
       <div style={{ marginBottom: "3rem" }}>
         <h1>
-          Todo List  <span style={{ fontSize: "40px" }}></span>
+          Todo List{" "}
+          <span onClick={handleTodoitemDataAdd} style={{ cursor: "pointer" }}>
+            +
+          </span>
         </h1>
-        <div
-          style={{
-            fontSize: "16px",
-            alignItems: "center",
-            marginLeft: "1.5em",
-            cursor: "pointer",
-          }}
-          onClick={(e) => {
-            const todoItemsCopy = [...todoItems];
-            todoItemsCopy.push({
-              id: todoId,
-              todoItemName: "",
-              isDone: false,
-            });
-            setTodoId(todoId + 1);
-            setTodoItems(todoItemsCopy);
-          }}
-          
-        >
-         ➕ 
-        </div>
 
         {todoItems.map((data) => {
           return (

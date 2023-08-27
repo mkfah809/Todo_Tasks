@@ -9,8 +9,6 @@ const TodoItem = (props) => {
   const { todoItemData, emitTodoItemDataUpdate, emitTodoItemDataDelete } =
     props; // dy btnfa3 law fi another property
 
-  console.log("");
-
   return (
     <div>
       <>
@@ -21,8 +19,7 @@ const TodoItem = (props) => {
             // msh bas el child.
             // e7na gebna data from parent to todoItem child component using PROPS
             todoItemData.isDone = !todoItemData.isDone;
-            emitTodoItemDataUpdate(todoItemData);
-            console.log("isDone value = ", todoItemData.isDone);
+            emitTodoItemDataUpdate(todoItemData, true);
           }}
         />
         {todoItemData.isDone ? (
@@ -43,15 +40,13 @@ const TodoItem = (props) => {
               value={todoItemData.todoItemName}
               onChange={(e) => {
                 todoItemData.todoItemName = e.target.value;
-                emitTodoItemDataUpdate(todoItemData);
+                emitTodoItemDataUpdate(todoItemData, false);
+              }}
+              onBlur={(e) => {
+                todoItemData.todoItemName = e.target.value;
+                emitTodoItemDataUpdate(todoItemData, true);
               }}
             />
-            <span
-              style={{ marginLeft: "1em", cursor: "pointer" }}
-              onClick={(e) => {
-                emitTodoItemDataDelete(todoItemData);
-              }}
-            ></span>
           </>
         )}
         <span
